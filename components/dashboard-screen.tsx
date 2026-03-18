@@ -1,16 +1,84 @@
 "use client"
 
-import { useState } from "react"
-import { Shield, MapPin, IndianRupee, ChevronRight, Bell, User } from "lucide-react"
+import { useState, useEffect } from "react"
+import { Shield, MapPin, IndianRupee, ChevronRight, Bell, User, AlertTriangle, X, Zap } from "lucide-react"
 import { Switch } from "@/components/ui/switch"
 import { Card, CardContent } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 
 export function DashboardScreen() {
   const [isProtectionActive, setIsProtectionActive] = useState(true)
+  const [showNotification, setShowNotification] = useState(false)
+
+  // Show notification after a short delay to simulate real-time alert
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowNotification(true)
+    }, 1500)
+    return () => clearTimeout(timer)
+  }, [])
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col relative">
+      {/* Push Notification Overlay */}
+      {showNotification && (
+        <div className="fixed inset-x-0 top-0 z-50 px-3 pt-3 animate-in slide-in-from-top-full duration-500">
+          <div className="relative bg-amber-50 border-2 border-amber-400 rounded-2xl shadow-xl shadow-amber-200/50 overflow-hidden">
+            {/* Animated warning stripe */}
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 animate-pulse" />
+            
+            {/* Close button */}
+            <button 
+              onClick={() => setShowNotification(false)}
+              className="absolute top-3 right-3 w-7 h-7 rounded-full bg-amber-200/80 flex items-center justify-center hover:bg-amber-300 transition-colors"
+            >
+              <X className="w-4 h-4 text-amber-800" />
+            </button>
+            
+            <div className="p-4 pt-5">
+              {/* Alert Header */}
+              <div className="flex items-start gap-3">
+                <div className="w-11 h-11 rounded-full bg-amber-500 flex items-center justify-center flex-shrink-0 shadow-lg shadow-amber-300/50">
+                  <AlertTriangle className="w-6 h-6 text-white" />
+                </div>
+                <div className="flex-1 pr-6">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-xs font-bold uppercase tracking-wide text-amber-700 bg-amber-200 px-2 py-0.5 rounded">Live Alert</span>
+                    <Zap className="w-3.5 h-3.5 text-amber-600 animate-pulse" />
+                  </div>
+                  <p className="text-sm font-bold text-amber-900 leading-snug">
+                    Grid Outage Detected at Dark Store #4
+                  </p>
+                </div>
+              </div>
+              
+              {/* Alert Body */}
+              <div className="mt-3 pl-14">
+                <p className="text-sm text-amber-800 leading-relaxed">
+                  Deliveries halted. Crediting <span className="font-bold text-amber-900">₹250</span> for 2 hours of lost downtime instantly.
+                </p>
+              </div>
+              
+              {/* Credit Badge */}
+              <div className="mt-4 flex items-center gap-3">
+                <div className="flex-1 bg-green-100 border border-green-300 rounded-xl px-4 py-3 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center">
+                      <IndianRupee className="w-4 h-4 text-white" strokeWidth={2.5} />
+                    </div>
+                    <div>
+                      <p className="text-xs text-green-700 font-medium">Instant Credit</p>
+                      <p className="text-lg font-bold text-green-800">₹250</p>
+                    </div>
+                  </div>
+                  <div className="w-2 h-2 rounded-full bg-green-500 animate-ping" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <header className="px-4 pt-6 pb-4">
         <div className="flex items-center justify-between">
