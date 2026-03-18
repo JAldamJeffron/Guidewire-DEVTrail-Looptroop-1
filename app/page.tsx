@@ -1,5 +1,5 @@
-import { DashboardScreen } from "@/components/dashboard-screen"
+import { NeonOnboardingScreen } from "@/components/neon-onboarding-screen"
 
 export default function Page() {
-  return <DashboardScreen />
+  return <NeonOnboardingScreen />
 }
