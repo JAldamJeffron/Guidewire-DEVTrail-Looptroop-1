@@ -1,5 +1,5 @@
-import { NeonOnboardingScreen } from "@/components/neon-onboarding-screen"
+import { FintechDashboard } from "@/components/fintech-dashboard"
 
 export default function Page() {
-  return <NeonOnboardingScreen />
+  return <FintechDashboard />
 }
