@@ -1,5 +1,5 @@
-import { OnboardingScreen } from "@/components/onboarding-screen"
+import { DashboardScreen } from "@/components/dashboard-screen"
 
 export default function Page() {
-  return <OnboardingScreen />
+  return <DashboardScreen />
 }
