@@ -14,8 +14,8 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'SafeShift - Delivery Worker Insurance',
-  description: 'A safety net for your hard work - Income protection for delivery workers against rain and power cuts',
+  title: 'EarnSure - Delivery Worker Insurance',
+  description: 'Your Income, Protected - Parametric insurance for delivery workers against rain, power cuts and disruptions',
   generator: 'v0.app',
   icons: {
     icon: [

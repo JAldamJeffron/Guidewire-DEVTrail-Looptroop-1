@@ -45,6 +45,14 @@ export function NeonOnboardingScreen() {
         {/* Content */}
         <div className="relative flex-1 flex flex-col px-5 py-8 max-w-md mx-auto w-full">
           
+          {/* EarnSure Logo Header */}
+          <div className="flex items-center justify-center gap-2 mb-6">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg shadow-primary/40">
+              <Shield className="w-5 h-5 text-primary-foreground" />
+            </div>
+            <span className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">EarnSure</span>
+          </div>
+          
           {/* Top Section - The Hook */}
           <header className="text-center mb-10">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/30 mb-6">
@@ -53,9 +61,9 @@ export function NeonOnboardingScreen() {
             </div>
             
             <h1 className="text-3xl font-bold text-foreground leading-tight mb-4 text-balance">
-              Your Income,{" "}
+              Welcome to EarnSure:{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-400">
-                Protected.
+                Your Income, Protected.
               </span>
             </h1>
             
@@ -127,7 +135,7 @@ export function NeonOnboardingScreen() {
               {/* Glow effect */}
               <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
               <Shield className="w-5 h-5 mr-2" />
-              Activate Weekly Shield
+              Activate EarnSure Shield
             </Button>
             
             <p className="text-center text-xs text-muted-foreground mt-4">

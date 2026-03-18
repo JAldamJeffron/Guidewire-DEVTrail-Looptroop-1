@@ -42,9 +42,10 @@ export function AnalyticsDashboard() {
       <header className="flex items-center justify-between px-5 py-4 border-b border-border/50">
         <div className="flex items-center gap-2">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg shadow-primary/30">
-            <BarChart3 className="w-5 h-5 text-primary-foreground" />
+            <Shield className="w-5 h-5 text-primary-foreground" />
           </div>
-          <span className="text-lg font-bold text-foreground">Analytics</span>
+          <span className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">EarnSure</span>
+          <span className="text-sm text-muted-foreground font-medium">Analytics</span>
         </div>
         <div className="flex items-center gap-3">
           <button className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center relative">
