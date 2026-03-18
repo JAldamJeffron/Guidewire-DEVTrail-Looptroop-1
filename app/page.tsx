@@ -1,5 +1,5 @@
-import { FintechDashboard } from "@/components/fintech-dashboard"
+import { MainApp } from "@/components/main-app"
 
 export default function Page() {
-  return <FintechDashboard />
+  return <MainApp />
 }

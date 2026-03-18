@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Shield, MapPin, Activity, Zap, TrendingUp, Bell, User, AlertTriangle, CheckCircle2, X, Sparkles } from "lucide-react"
+import { Shield, MapPin, Activity, Zap, TrendingUp, Bell, User, AlertTriangle, CheckCircle2, X, Sparkles, Clock, Navigation } from "lucide-react"
 import { Switch } from "@/components/ui/switch"
 import { Card, CardContent } from "@/components/ui/card"
 
@@ -69,6 +69,32 @@ export function FintechDashboard() {
                   </div>
                   <span className="text-xs text-red-400/80 font-medium uppercase tracking-wide">Live Update</span>
                   <span className="text-xs text-muted-foreground">12:47 PM</span>
+                </div>
+
+                {/* Fraud Detection Verification */}
+                <div className="mt-4 p-3 rounded-xl bg-secondary/50 border border-border/30">
+                  <p className="text-xs font-semibold text-primary mb-2 flex items-center gap-1.5">
+                    <Shield className="w-3.5 h-3.5" />
+                    Fraud Detection Verified
+                  </p>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="flex items-center gap-1.5">
+                      <MapPin className="w-3 h-3 text-accent" />
+                      <span className="text-xs text-muted-foreground">GPS: Within Zone</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <Clock className="w-3 h-3 text-accent" />
+                      <span className="text-xs text-muted-foreground">Shift: Active</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <Navigation className="w-3 h-3 text-accent" />
+                      <span className="text-xs text-muted-foreground">Store: 0.8km</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <Zap className="w-3 h-3 text-accent" />
+                      <span className="text-xs text-muted-foreground">Grid: Confirmed</span>
+                    </div>
+                  </div>
                 </div>
               </div>
 
