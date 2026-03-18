@@ -14,8 +14,8 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'பாதுகாப்பு - Delivery Worker Insurance',
-  description: 'உங்கள் உழைப்பிற்கு ஒரு பாதுகாப்பு கவசம் - Income protection for delivery workers',
+  title: 'SafeShift - Delivery Worker Insurance',
+  description: 'A safety net for your hard work - Income protection for delivery workers against rain and power cuts',
   generator: 'v0.app',
   icons: {
     icon: [

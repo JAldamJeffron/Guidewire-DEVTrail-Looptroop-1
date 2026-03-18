@@ -12,7 +12,7 @@ export function OnboardingScreen() {
           <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
             <Shield className="w-5 h-5 text-primary-foreground" />
           </div>
-          <span className="text-lg font-semibold text-foreground">பாதுகாப்பு</span>
+          <span className="text-lg font-semibold text-foreground">SafeShift</span>
         </div>
       </header>
 
@@ -52,22 +52,22 @@ export function OnboardingScreen() {
         {/* Text Content */}
         <div className="flex-1 flex flex-col justify-center pb-4">
           <h1 className="text-2xl font-bold text-foreground leading-tight text-balance mb-4">
-            உங்கள் உழைப்பிற்கு ஒரு பாதுகாப்பு கவசம்
+            A Safety Net for Your Hard Work
           </h1>
           
           <p className="text-base text-muted-foreground leading-relaxed">
-            மழை மற்றும் மின்தடையால் ஏற்படும் வாராந்திர வருமான இழப்பிலிருந்து உங்களைப் பாதுகாத்துக்கொள்ளுங்கள். மருத்துவ அல்லது வாகன செலவுகளுக்கு அல்ல, உங்கள் உழைப்பிற்கு மட்டுமே.
+            Protect yourself from weekly income loss caused by rain and dark store power cuts. Not for medical or vehicle expenses—strictly for your lost hours.
           </p>
 
           {/* Feature Pills */}
           <div className="flex flex-wrap gap-2 mt-6">
             <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium">
               <CloudRain className="w-4 h-4" />
-              மழை பாதுகாப்பு
+              Rain Protection
             </span>
             <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-accent/10 text-accent text-sm font-medium">
               <Zap className="w-4 h-4" />
-              மின்தடை பாதுகாப்பு
+              Power Cut Coverage
             </span>
           </div>
         </div>
@@ -79,7 +79,7 @@ export function OnboardingScreen() {
           size="lg" 
           className="w-full h-14 text-lg font-semibold rounded-xl shadow-lg shadow-primary/25 transition-all hover:shadow-xl hover:shadow-primary/30"
         >
-          ஆரம்பிக்கலாம்
+          Get Started
           <ArrowRight className="w-5 h-5 ml-2" />
         </Button>
         
@@ -87,7 +87,7 @@ export function OnboardingScreen() {
         <p className="text-center text-sm text-muted-foreground mt-4">
           <span className="inline-flex items-center gap-1">
             <Shield className="w-3.5 h-3.5" />
-            100% பாதுகாப்பான தகவல்கள்
+            Your data is 100% secure
           </span>
         </p>
       </footer>
