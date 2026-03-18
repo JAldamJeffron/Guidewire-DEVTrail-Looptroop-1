@@ -1,15 +1,125 @@
 "use client"
 
-import { useState } from "react"
-import { Shield, MapPin, Activity, Zap, TrendingUp, Bell, User } from "lucide-react"
+import { useState, useEffect } from "react"
+import { Shield, MapPin, Activity, Zap, TrendingUp, Bell, User, AlertTriangle, CheckCircle2, X, Sparkles } from "lucide-react"
 import { Switch } from "@/components/ui/switch"
 import { Card, CardContent } from "@/components/ui/card"
 
 export function FintechDashboard() {
   const [isShieldActive, setIsShieldActive] = useState(true)
+  const [showAlert, setShowAlert] = useState(false)
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowAlert(true), 1200)
+    return () => clearTimeout(timer)
+  }, [])
 
   return (
-    <div className="min-h-screen bg-background dark flex flex-col">
+    <div className="min-h-screen bg-background dark flex flex-col relative">
+      {/* Glassmorphism Alert Overlay */}
+      {showAlert && (
+        <>
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 z-40 bg-background/60 backdrop-blur-sm animate-in fade-in duration-300"
+            onClick={() => setShowAlert(false)}
+          />
+          
+          {/* Alert Card */}
+          <div className="fixed inset-x-4 top-1/2 -translate-y-1/2 z-50 animate-in zoom-in-95 slide-in-from-bottom-4 duration-500">
+            <div className="relative bg-card/80 backdrop-blur-xl border border-border/50 rounded-3xl shadow-2xl shadow-black/50 overflow-hidden">
+              {/* Animated gradient border effect */}
+              <div className="absolute inset-0 rounded-3xl p-px bg-gradient-to-b from-red-500/30 via-transparent to-accent/30 pointer-events-none" />
+              
+              {/* Close button */}
+              <button 
+                onClick={() => setShowAlert(false)}
+                className="absolute top-4 right-4 w-8 h-8 rounded-full bg-secondary/80 backdrop-blur-sm flex items-center justify-center hover:bg-secondary transition-colors z-10"
+              >
+                <X className="w-4 h-4 text-muted-foreground" />
+              </button>
+
+              {/* AI Badge */}
+              <div className="absolute top-4 left-4 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/20 backdrop-blur-sm border border-primary/30">
+                <Sparkles className="w-3.5 h-3.5 text-primary animate-pulse" />
+                <span className="text-xs font-semibold text-primary">AI System Alert</span>
+              </div>
+
+              {/* Header - The Problem */}
+              <div className="pt-14 px-5 pb-5 bg-gradient-to-b from-red-500/15 to-transparent">
+                <div className="flex items-start gap-4">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center shadow-lg shadow-red-500/30 flex-shrink-0">
+                    <AlertTriangle className="w-7 h-7 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-bold text-red-400 mb-1">
+                      Critical Disruption Detected
+                    </h3>
+                    <p className="text-sm text-foreground/90 leading-relaxed">
+                      Massive Power Grid failure at Dark Store #4. All deliveries in this zone are halted.
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Live indicator */}
+                <div className="flex items-center gap-2 mt-4">
+                  <div className="relative">
+                    <div className="w-2 h-2 rounded-full bg-red-500" />
+                    <div className="absolute inset-0 w-2 h-2 rounded-full bg-red-500 animate-ping" />
+                  </div>
+                  <span className="text-xs text-red-400/80 font-medium uppercase tracking-wide">Live Update</span>
+                  <span className="text-xs text-muted-foreground">12:47 PM</span>
+                </div>
+              </div>
+
+              {/* Divider */}
+              <div className="relative h-px mx-5">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-border to-transparent" />
+                <div className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-card border border-border flex items-center justify-center">
+                  <Zap className="w-4 h-4 text-accent" />
+                </div>
+              </div>
+
+              {/* Footer - The Solution */}
+              <div className="pt-5 px-5 pb-6 bg-gradient-to-t from-accent/10 to-transparent">
+                <div className="flex items-start gap-4">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-accent to-emerald-400 flex items-center justify-center shadow-lg shadow-accent/30 flex-shrink-0">
+                    <CheckCircle2 className="w-7 h-7 text-accent-foreground" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-bold text-accent mb-1">
+                      Automated Solution Triggered
+                    </h3>
+                    <p className="text-sm text-foreground/90 leading-relaxed">
+                      Parametric claim approved. <span className="font-bold text-accent">Rs. 250</span> has been instantly credited to your UPI for 2 hours of lost downtime.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Credit confirmation */}
+                <div className="mt-5 p-4 rounded-2xl bg-accent/15 border border-accent/30 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent to-emerald-400 flex items-center justify-center shadow-lg shadow-accent/20">
+                      <span className="text-lg font-bold text-accent-foreground">Rs.</span>
+                    </div>
+                    <div>
+                      <p className="text-xs text-accent font-medium">Instant Credit</p>
+                      <p className="text-2xl font-bold text-foreground">250</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-end gap-1">
+                    <div className="flex items-center gap-1.5">
+                      <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+                      <span className="text-xs font-medium text-accent">Credited</span>
+                    </div>
+                    <span className="text-xs text-muted-foreground">to UPI</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
       {/* Header */}
       <header className="flex items-center justify-between px-5 py-4 border-b border-border/50">
         <div className="flex items-center gap-2">
