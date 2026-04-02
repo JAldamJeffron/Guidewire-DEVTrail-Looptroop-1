@@ -36,9 +36,12 @@ def predict_premium():
     if hazardous_material_spill:
         premium += (base_avg_daily_loss * 3.0) * 0.015
         
+    # Ensure cost stays bounded explicitly between a LOW (₹35) and HIGH (₹75) ceiling
+    guarded_premium = max(35.0, min(75.0, premium))
+
     return jsonify({
         "base_premium_inr": base_premium,
-        "calculated_premium_inr": max(30.0, premium),
+        "calculated_premium_inr": guarded_premium,
         "risk_factors_analyzed": {
             "zone_risk": zone_risk,
             "historical_waterlogging": historical_waterlogging,

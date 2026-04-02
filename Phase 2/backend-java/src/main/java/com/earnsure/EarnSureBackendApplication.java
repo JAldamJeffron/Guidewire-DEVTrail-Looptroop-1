@@ -52,6 +52,11 @@ public class EarnSureBackendApplication {
         if (claimParams.containsKey("days_lost")) {
             actualLossPayout = Double.parseDouble(claimParams.get("days_lost").toString()) * 850.00;
         } 
+
+        // Enforce strict parametric boundaries: It should not be too low or too high
+        double lowestPayoutAllowed = 300.00;
+        double highestPayoutAllowed = 2500.00;
+        actualLossPayout = Math.max(lowestPayoutAllowed, Math.min(highestPayoutAllowed, actualLossPayout));
         
         return ResponseEntity.ok(Map.of(
             "status", "PAYOUT_INITIATED", 
