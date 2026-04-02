@@ -6,7 +6,7 @@ function App() {
   const [premium, setPremium] = useState(45);
   const [worker, setWorker] = useState(null);
   const [history, setHistory] = useState([]);
-  const [regData, setRegData] = useState({ name: '', platform: 'Zepto', zone: '', upiId: '', avgRides: 0, avgEarnings: 0, vehicleType: '' });
+  const [regData, setRegData] = useState({ name: 'Ravi Kumar', platform: 'Zepto', zone: '400053 (Andheri)', upiId: 'ravi.gig@okhdfcbank', avgRides: 0, avgEarnings: 0, vehicleType: '' });
   const [partnerConnected, setPartnerConnected] = useState(false);
   const [notification, setNotification] = useState(null);
 

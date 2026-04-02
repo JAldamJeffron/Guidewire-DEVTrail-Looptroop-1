@@ -37,12 +37,13 @@ public class EarnSureBackendApplication {
         workerDatabase.put("avgEarnings", data.getOrDefault("avgEarnings", 6500));
         workerDatabase.put("vehicleType", data.getOrDefault("vehicleType", "Two-Wheeler"));
         
-        // Task 3 Aggregate Initializers for the Profile Ledger
-        workerDatabase.put("totalHoursLost", 0.0);
-        workerDatabase.put("totalPayouts", 0.0);
+        // Task 3 Aggregate Initializers for the Profile Ledger (Pre-Loaded for Demo Purposes)
+        workerDatabase.put("totalHoursLost", 18.0);
+        workerDatabase.put("totalPayouts", 1700.0);
         workerDatabase.put("policyActive", true);
         
         recordHistory("Worker Profile Synced from " + data.get("platform") + " API. Shield dynamically locked.");
+        recordHistory("HISTORICAL LOG: Identified 18 hours unplanned offline routing downtime last month. Cleared ₹1700.0 to UPI framework.");
         
         return ResponseEntity.ok(Map.of("status", "SUCCESS", "worker_id", workerId));
     }
