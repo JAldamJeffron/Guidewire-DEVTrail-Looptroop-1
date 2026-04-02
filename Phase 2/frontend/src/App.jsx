@@ -118,7 +118,7 @@ function App() {
           <h2>Worker Secure Onboarding</h2>
           <div className="onboard-flow">
             {!partnerConnected ? (
-              <button type="button" className="connect-btn" onClick={handleConnectPartner}>🔗 Connect to Partner App (Mock Swiggy/Zepto)</button>
+              <button type="button" className="connect-btn" onClick={handleConnectPartner}>🔗 Connect to Partner App (Mock Blinkit/Instamart)</button>
             ) : (
               <div className="gig-stats-card">
                 <h4>Partner API Connected</h4>
@@ -132,7 +132,7 @@ function App() {
               <select value={regData.platform} onChange={e => setRegData({...regData, platform: e.target.value})}>
                 <option>Zepto</option>
                 <option>Blinkit</option>
-                <option>Swiggy Instamart</option>
+                <option>Instamart</option>
               </select>
               <input placeholder="Zone / Pincode" value={regData.zone} onChange={e => setRegData({...regData, zone: e.target.value})} required/>
               <input placeholder="UPI ID (For Instant Payouts)" value={regData.upiId} onChange={e => setRegData({...regData, upiId: e.target.value})} required/>
