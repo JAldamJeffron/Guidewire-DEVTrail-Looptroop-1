@@ -1,0 +1,5 @@
+com\earnsure\service\ParametricTriggerService.class
+com\earnsure\controller\InsuranceController.class
+com\earnsure\EarnSureBackendApplication.class
+com\earnsure\service\ClaimService.class
+com\earnsure\service\TriggerPollingService.class

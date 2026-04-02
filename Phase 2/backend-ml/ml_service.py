@@ -2,26 +2,45 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-base_premium = 45.0
-
 @app.route('/api/predict_premium', methods=['POST'])
 def predict_premium():
-    data = request.json or {}
-    zone_risk = data.get('zone_risk', 'moderate')
+    data = request.json
+    
+    # Extract parametric factors
+    zone_risk = data.get('zone_risk', 'low')
     historical_waterlogging = data.get('historical_waterlogging', False)
     predictive_weather = data.get('predictive_weather', 'clear')
     geopolitical_fuel_shortage = data.get('geopolitical_fuel_shortage', False)
     hazardous_material_spill = data.get('hazardous_material_spill', False)
+    
+    # Task 4 Extraction: Active Delivery Worker Load Volume
+    avg_rides = data.get('avg_rides', 100)
 
+    # Hard baseline requirement for parametric model
+    base_premium = 45.0
     premium = base_premium
 
-    # Feature 1: The model charges ₹2 less per week if the worker operates in a zone historically safe from water logging.
-    if not historical_waterlogging:
-        premium -= 2.0
-    
-    # Simple ML emulation adjustment for dynamic predictive weather
-    if predictive_weather == 'storm':
+    # ML Feature: Weekly Worker Exposure Model Tracking High Ride Density 
+    if avg_rides >= 200:
+        premium += 9.5
+    elif avg_rides >= 140:
         premium += 5.0
+    elif avg_rides < 50:
+        premium -= 3.5
+
+    # Feature 1: Zone Risk Assessment
+    if zone_risk == 'high':
+        premium += 10.0
+    elif zone_risk == 'medium':
+        premium += 5.0
+        
+    # Feature 2: Historical Waterlogging Map
+    if not historical_waterlogging:
+        premium -= 2.0  # Discount if zone has clean history
+        
+    # Feature 3: Weather Prediction Adjustment
+    if predictive_weather == 'heavy_rain':
+        premium += 15.0
     elif predictive_weather == 'extreme_heat':
         premium += 3.0
         
@@ -46,9 +65,11 @@ def predict_premium():
             "zone_risk": zone_risk,
             "historical_waterlogging": historical_waterlogging,
             "predictive_weather": predictive_weather,
-            "hazardous_material_spill": hazardous_material_spill
+            "hazardous_material_spill": hazardous_material_spill,
+            "avg_rides": avg_rides
         }
     })
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    # Run the web api on port 5000 binding to native environment
+    app.run(host='0.0.0.0', port=5000, debug=True)
