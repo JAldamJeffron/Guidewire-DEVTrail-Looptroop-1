@@ -2,108 +2,132 @@ import React, { useState, useEffect } from 'react';
 import './index.css';
 
 function App() {
+  const [activeTab, setActiveTab] = useState('register');
   const [premium, setPremium] = useState(45);
-  const [isActivating, setIsActivating] = useState(false);
-  const [activated, setActivated] = useState(false);
+  const [worker, setWorker] = useState(null);
+  const [history, setHistory] = useState([]);
+  const [regData, setRegData] = useState({ name: '', platform: 'Zepto', zone: '', upiId: '' });
 
-  // ML Simulation over time
-  useEffect(() => {
-    const interval = setInterval(() => {
-      // Simulate real-time adjustment based on constraints (Base ₹45 ± Risk Modifier)
-      const modifier = Math.floor(Math.random() * 15) - 5; // -5 to +10
-      setPremium(45 + modifier);
-    }, 3500);
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleActivate = () => {
-    setIsActivating(true);
-    setTimeout(() => {
-      setIsActivating(false);
-      setActivated(true);
-    }, 1500);
+  // Load Profile/History from Java Spring Boot
+  const fetchProfile = async () => {
+    try {
+      const res = await fetch('http://localhost:8080/api/profile');
+      const data = await res.json();
+      if(data.worker_status) setWorker(data.worker_status);
+      setHistory(data.ledger || []);
+    } catch(err) { console.error("Java Server not running.", err); }
   };
 
+  // 1. Registration Function
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    try {
+      await fetch('http://localhost:8080/api/register', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(regData)
+      });
+      alert('Registration Successful! Shield Active.');
+      setActiveTab('profile');
+      fetchProfile();
+    } catch(err) { alert('Registration Failed. Ensure Java Backend is running.'); }
+  };
+
+  // 3. Dev Mode / Trigger Simulator
+  const simulateTrigger = async (triggerName, daysLost) => {
+    try {
+      await fetch('http://localhost:8080/api/claims/process', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ trigger_type: triggerName, days_lost: daysLost })
+      });
+      alert(`Simulation Fired: ${triggerName}. Payout Executed!`);
+      // Update Premium randomly reflecting ML backend
+      setPremium(prev => prev + (Math.random() * 10));
+      fetchProfile();
+    } catch(err) { alert('API Offline.'); }
+  };
+
+  useEffect(() => {
+    if(activeTab === 'profile') fetchProfile();
+  }, [activeTab]);
+
   return (
-    <div className="earnsure-container">
-      <header className="header">
-        <h1 className="title-gradient">EarnSure 🦄</h1>
-        <p className="subtitle">AI Privacy-First Parametric Shield</p>
-      </header>
-
-      {/* Dynamic Premium Engine */}
-      <section className="glass-card ml-engine">
-        <div className="ml-header">
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 600 }}>Weekly Shield</h3>
-          <div className="pulse-badge">
-            <span className="pulse-dot"></span>
-            ML Pricing
-          </div>
+    <div className="app-container">
+      <nav className="top-nav">
+        <div className="brand">EarnSure <span>Phase 2</span></div>
+        <div className="tabs">
+          <button onClick={() => setActiveTab('register')} className={activeTab === 'register' ? 'active' : ''}>1. Onboard</button>
+          <button onClick={() => setActiveTab('dashboard')} className={activeTab === 'dashboard' ? 'active' : ''}>2. Live Dashboard</button>
+          <button onClick={() => setActiveTab('profile')} className={activeTab === 'profile' ? 'active' : ''}>3. Profile Ledger</button>
         </div>
-        <div>
-          <div className="premium-value">₹{premium}</div>
-          <p className="premium-note">Dynamic rate based on active 3km delivery zone risk factors.</p>
-        </div>
-      </section>
+      </nav>
 
-      {/* Core Triggers */}
-      <section className="glass-card" style={{ padding: '1.2rem' }}>
-        <h3 style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '1px' }}>
-          Automated Triggers
-        </h3>
-        <div className="trigger-grid">
-          <div className="trigger-item">
-            <div className="trigger-icon icon-weather">⛈️</div>
-            <div className="trigger-text">
-              <h4>Extreme Weather</h4>
-              <p>Floods & Heavy Rain alerts</p>
-            </div>
-          </div>
-          <div className="trigger-item">
-            <div className="trigger-icon icon-grid">⚡</div>
-            <div className="trigger-text">
-              <h4>Grid Failures</h4>
-              <p>Dark store local power outages</p>
-            </div>
-          </div>
-          <div className="trigger-item">
-            <div className="trigger-icon icon-pollution">🌫️</div>
-            <div className="trigger-text">
-              <h4>Severe Pollution</h4>
-              <p>Hazardous AQI halting delivery</p>
-            </div>
-          </div>
-          <div className="trigger-item">
-            <div className="trigger-icon icon-civic">🚧</div>
-            <div className="trigger-text">
-              <h4>Civic Disruptions</h4>
-              <p>Unplanned curfews & blockades</p>
-            </div>
-          </div>
-          <div className="trigger-item">
-            <div className="trigger-icon" style={{ background: 'rgba(255, 69, 0, 0.2)', color: '#FF4500' }}>🛢️</div>
-            <div className="trigger-text">
-              <h4>Fuel Scarcity</h4>
-              <p>Petroleum shortage (War)</p>
-            </div>
-          </div>
-          <div className="trigger-item">
-            <div className="trigger-icon" style={{ background: 'rgba(57, 255, 20, 0.2)', color: '#39FF14' }}>☣️</div>
-            <div className="trigger-text">
-              <h4>Toxic Materials</h4>
-              <p>Public health hazards / Spills</p>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* REGISTRATION */}
+      {activeTab === 'register' && (
+        <section className="registration-panel">
+          <h2>Worker Secure Onboarding</h2>
+          <form onSubmit={handleRegister} className="reg-form">
+            <input placeholder="Full Name" value={regData.name} onChange={e => setRegData({...regData, name: e.target.value})} required/>
+            <select value={regData.platform} onChange={e => setRegData({...regData, platform: e.target.value})}>
+              <option>Zepto</option>
+              <option>Blinkit</option>
+              <option>Swiggy Instamart</option>
+            </select>
+            <input placeholder="Zone / Pincode" value={regData.zone} onChange={e => setRegData({...regData, zone: e.target.value})} required/>
+            <input placeholder="UPI ID (For Instant Payouts)" value={regData.upiId} onChange={e => setRegData({...regData, upiId: e.target.value})} required/>
+            <button type="submit" className="submit-btn">Activate Q-Commerce Shield</button>
+          </form>
+        </section>
+      )}
 
-      <button className="btn-primary" onClick={handleActivate} disabled={activated || isActivating} style={{ opacity: activated ? 0.7 : 1 }}>
-        {isActivating ? 'Authenticating GPS...' : activated ? 'Shield Active 🛡️' : 'Activate Instant Coverage'}
-      </button>
-      
-      <p style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-        Zero-touch claims. Payouts credited directly to UPI via anomaly detection.
-      </p>
+      {/* DASHBOARD & SIMULATOR */}
+      {activeTab === 'dashboard' && (
+        <section className="dashboard-panel">
+          <div className="premium-card">
+            <h3>Current Weekly Rate</h3>
+            <div className="premium-price">₹{premium.toFixed(2)}</div>
+            <p>Predictive Live Algorithm Binding</p>
+          </div>
+
+          <div className="simulator-panel">
+            <h3>Dev Mode: Force API Disruptions</h3>
+            <p>Execute external shocks to test Java Auto-Claims & History mapping.</p>
+            <div className="sim-buttons">
+              <button onClick={() => simulateTrigger("WEATHER_FLOOD", 2)}>⛈️ Force Heavy Rain (2 days)</button>
+              <button onClick={() => simulateTrigger("POWER_GRID_FAIL", 1)}>🔌 Force Grid Failure</button>
+              <button onClick={() => simulateTrigger("FUEL_SHORTAGE", 3)}>🛢️ Force Fuel Scarcity</button>
+              <button onClick={() => simulateTrigger("TOXIC_SPILL", 4)}>☣️ Force Biohazard</button>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* PROFILE LEDGER */}
+      {activeTab === 'profile' && (
+        <section className="profile-panel">
+          <h2>Work Profile & Actuarial Ledger</h2>
+          {worker ? (
+            <div className="worker-details">
+              <p><strong>ID/Name:</strong> {worker.workerId} | {worker.name}</p>
+              <p><strong>Platform:</strong> {worker.platform}</p>
+              <p><strong>Target UPI:</strong> {worker.upiId}</p>
+              <p><strong>Shield Status:</strong> <span style={{color: '#00FF66'}}>ACTIVE</span></p>
+            </div>
+          ) : <p>No worker registered. Please Onboard first!</p>}
+
+          <div className="history-ledger">
+            <h3>Automated Payout History</h3>
+            <ul>
+              {history.length === 0 ? <li>No recorded logic events yet...</li> : 
+                history.map((h, i) => (
+                  <li key={i}><strong>{h.date.split('G')[0]}</strong> - {h.event}</li>
+                ))
+              }
+            </ul>
+          </div>
+        </section>
+      )}
     </div>
   );
 }
