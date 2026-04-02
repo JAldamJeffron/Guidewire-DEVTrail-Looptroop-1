@@ -14,6 +14,7 @@ function App() {
   const [wiRides, setWiRides] = useState(140);
   const [wiWeather, setWiWeather] = useState('clear');
   const [wiPredictedPremium, setWiPredictedPremium] = useState(45);
+  const [wiReasons, setWiReasons] = useState([]);
 
   const fetchProfile = async () => {
     try {
@@ -21,7 +22,7 @@ function App() {
       const data = await res.json();
       if(data.worker_status) setWorker(data.worker_status);
       setHistory(data.ledger || []);
-    } catch(err) { console.error("Java Server not running.", err); }
+    } catch(err) { console.error("Java Server offline.", err); }
   };
 
   const handleConnectPartner = () => {
@@ -62,21 +63,37 @@ function App() {
     } catch(err) { alert('API Offline.'); }
   };
 
-  // What-If calculation reacting linearly to mock metrics matching our Python backend constraints
+  // LIVE ML MODEL FETCHING
+  // This automatically hits the Python ML endpoint every time you adjust sliders
   useEffect(() => {
-    let price = 45;
-    if (wiRides >= 200) price += 9.5;
-    else if (wiRides >= 140) price += 5.0;
-    else if (wiRides < 50) price -= 3.5;
-    if (wiWeather === 'heavy_rain') price += 15.0;
-    else if (wiWeather === 'extreme_heat') price += 3.0;
-    const guarded = Math.max(35.0, Math.min(75.0, price));
-    setWiPredictedPremium(guarded);
+    const fetchLiveML = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/predict_premium', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            avg_rides: parseInt(wiRides),
+            predictive_weather: wiWeather,
+            historical_waterlogging: false 
+          })
+        });
+        const mlData = await response.json();
+        setWiPredictedPremium(mlData.calculated_premium_inr);
+        setWiReasons(mlData.reasons || []);
+      } catch (err) {
+        console.error("Python ML Server Offline", err);
+      }
+    };
+    fetchLiveML();
   }, [wiRides, wiWeather]);
 
   useEffect(() => {
     if(activeTab === 'profile') fetchProfile();
   }, [activeTab]);
+
+  // Fallback defaults for Impact Grid so NaN never displays
+  const hoursLost = worker?.totalHoursLost !== undefined ? worker.totalHoursLost : 18.0;
+  const payouts = worker?.totalPayouts !== undefined ? worker.totalPayouts : 1700.0;
 
   return (
     <div className="app-container">
@@ -141,22 +158,32 @@ function App() {
             </div>
 
             <div className="what-if-panel">
-               <h3>"What-If" Predictor Tool</h3>
-               <p>Actuarial preview modeled alongside local ML pricing boundaries.</p>
+               <h3>Live Actuarial What-If Predictor</h3>
+               <p>Sliders hook directly into Python ML Engine API calculating live algorithm bounds.</p>
                <div className="wi-inputs">
                   <label>Average Weekly Rides ({wiRides})</label>
                   <input type="range" min="30" max="250" value={wiRides} onChange={(e) => setWiRides(e.target.value)} />
                   
-                  <label style={{marginTop: '1rem'}}>Predicted Weather Risk</label>
+                  <label style={{marginTop: '1rem'}}>Active Weather Zone Prediction</label>
                   <select value={wiWeather} onChange={(e) => setWiWeather(e.target.value)}>
-                    <option value="clear">Clear (No Risk)</option>
-                    <option value="heavy_rain">Heavy Rain / Cyclone</option>
-                    <option value="extreme_heat">Extreme Heatwave</option>
+                    <option value="clear">Clear (Normal Risk)</option>
+                    <option value="heavy_rain">Severe Cyclone Advisory</option>
+                    <option value="extreme_heat">Critical Heatwave Directive</option>
                   </select>
                </div>
                <div className="wi-result">
                   <div className="premium-price" style={{fontSize: '3rem'}}>₹{wiPredictedPremium.toFixed(2)}</div>
-                  <p>Predicted Weekly Premium</p>
+                  <p>Guarded Weekly Premium</p>
+                  
+                  {/* ML Algorithm Breakdown Feed */}
+                  <div style={{marginTop: '1rem', textAlign: 'left', background: 'rgba(0,0,0,0.5)', padding: '1rem', borderRadius: '12px'}}>
+                     <h5 style={{margin: '0 0 10px 0', color: '#94a3b8'}}>ML Engine Math Breakdown:</h5>
+                     <ul style={{fontSize: '0.85rem', color: '#00ff66', paddingLeft: '20px', margin: 0}}>
+                        {wiReasons.map((reason, idx) => (
+                           <li style={{marginBottom: '5px', color: reason.includes('CAP REACHED') ? '#ff007a' : undefined}} key={idx}>{reason}</li>
+                        ))}
+                     </ul>
+                  </div>
                </div>
             </div>
           </section>
@@ -167,43 +194,39 @@ function App() {
       {activeTab === 'profile' && (
         <section className="profile-panel">
           <h2>Work Profile & Actuarial Ledger</h2>
-          {worker ? (
-            <>
-            <div className="worker-details">
-              <p><strong>ID/Name:</strong> {worker.workerId} | {worker.name}</p>
-              <p><strong>Platform:</strong> {worker.platform} ({worker.avgRides} Rides/Wk)</p>
-              <p><strong>Target UPI:</strong> {worker.upiId}</p>
-              <p><strong>Shield Status:</strong> <span style={{color: '#00FF66'}}>ACTIVE</span></p>
-            </div>
+          <div className="worker-details">
+            <p><strong>ID/Name:</strong> {worker?.workerId || 'WK-DEMO-73'} | {worker?.name || regData.name}</p>
+            <p><strong>Platform:</strong> {worker?.platform || regData.platform} ({worker?.avgRides || 140} Rides/Wk)</p>
+            <p><strong>Target UPI:</strong> {worker?.upiId || regData.upiId}</p>
+            <p><strong>Shield Status:</strong> <span style={{color: '#00FF66'}}>ACTIVE</span></p>
+          </div>
 
-            <div className="impact-summary-widget">
-               <h3>Weekly Impact Summary</h3>
-               <div className="impact-grid">
-                  <div className="impact-box red">
-                     <h4>{worker.totalHoursLost}</h4>
-                     <span>Hours Lost to Disruptions</span>
-                  </div>
-                  <div className="impact-box red">
-                     <h4>₹{(worker.totalHoursLost * 106).toFixed(0)}</h4> 
-                     <span>Estimated Lost Earnings</span>
-                  </div>
-                  <div className="impact-box green">
-                     <h4>₹{worker.totalPayouts}</h4>
-                     <span>EarnSure Payouts</span>
-                  </div>
-                  <div className="impact-box neutral">
-                     <h4>₹0</h4>
-                     <span>Net Active Loss</span>
-                  </div>
-               </div>
-            </div>
-            </>
-          ) : <p>No worker registered. Please Onboard first!</p>}
+          <div className="impact-summary-widget">
+             <h3>Weekly Impact Summary</h3>
+             <div className="impact-grid">
+                <div className="impact-box red">
+                   <h4>{hoursLost}</h4>
+                   <span>Hours Lost to Disruptions</span>
+                </div>
+                <div className="impact-box red">
+                   <h4>₹{(hoursLost * 106).toFixed(0)}</h4> 
+                   <span>Estimated Lost Earnings</span>
+                </div>
+                <div className="impact-box green">
+                   <h4>₹{payouts}</h4>
+                   <span>EarnSure Payouts</span>
+                </div>
+                <div className="impact-box neutral">
+                   <h4>₹0</h4>
+                   <span>Net Active Loss</span>
+                </div>
+             </div>
+          </div>
 
           <div className="history-ledger" style={{marginTop: '2rem'}}>
             <h3>Automated Payout History</h3>
             <ul>
-              {history.length === 0 ? <li>No recorded logic events yet...</li> : 
+              {history.length === 0 ? <li>No active recorded events. Press the Dev Simulators to map data.</li> : 
                 history.map((h, i) => (
                   <li key={i}><strong>{h.date.split('G')[0]}</strong> - {h.event}</li>
                 ))
