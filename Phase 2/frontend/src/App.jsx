@@ -87,6 +87,13 @@ function App() {
               <p>Petroleum shortage (War)</p>
             </div>
           </div>
+          <div className="trigger-item">
+            <div className="trigger-icon" style={{ background: 'rgba(57, 255, 20, 0.2)', color: '#39FF14' }}>☣️</div>
+            <div className="trigger-text">
+              <h4>Toxic Materials</h4>
+              <p>Public health hazards / Spills</p>
+            </div>
+          </div>
         </div>
       </section>
 

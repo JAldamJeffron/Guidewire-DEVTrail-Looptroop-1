@@ -37,6 +37,11 @@ public class ParametricTriggerService {
         if (checkApiStatus("GEOPOLITICAL")) {
             executeZeroTouchClaim("FUEL_SHORTAGE_CRITICAL", "War-induced petroleum scarcity. Commercial fuel access blocked.");
         }
+
+        // 6. Biohazard API (Materials affecting public and workers)
+        if (checkApiStatus("BIOHAZARD")) {
+            executeZeroTouchClaim("HAZMAT_CRITICAL", "Toxic material spill or biohazard detected. Immediate public and worker evacuation.");
+        }
     }
 
     /**

@@ -11,6 +11,7 @@ def predict_premium():
     historical_waterlogging = data.get('historical_waterlogging', False)
     predictive_weather = data.get('predictive_weather', 'clear')
     geopolitical_fuel_shortage = data.get('geopolitical_fuel_shortage', False)
+    hazardous_material_spill = data.get('hazardous_material_spill', False)
 
     premium = base_premium
 
@@ -28,13 +29,18 @@ def predict_premium():
     if geopolitical_fuel_shortage:
         premium += 12.0
         
+    # ML Feature: Massive public health risk inflation
+    if hazardous_material_spill:
+        premium += 15.0
+        
     return jsonify({
         "base_premium_inr": base_premium,
         "calculated_premium_inr": max(30.0, premium),
         "risk_factors_analyzed": {
             "zone_risk": zone_risk,
             "historical_waterlogging": historical_waterlogging,
-            "predictive_weather": predictive_weather
+            "predictive_weather": predictive_weather,
+            "hazardous_material_spill": hazardous_material_spill
         }
     })
 
