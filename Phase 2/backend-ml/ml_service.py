@@ -25,13 +25,16 @@ def predict_premium():
     elif predictive_weather == 'extreme_heat':
         premium += 3.0
         
-    # ML Feature: High risk inflation adjuster for war/petroleum shortage constraints
+    # Actuarial Modeling: Base average daily wage loss for delivery worker
+    base_avg_daily_loss = 850.0 
+
+    # ML Feature: Expected 2-day work loss from geopolitical fuel shortage (Actuarial probability factor = 1.2%)
     if geopolitical_fuel_shortage:
-        premium += 12.0
+        premium += (base_avg_daily_loss * 2.0) * 0.012
         
-    # ML Feature: Massive public health risk inflation
+    # ML Feature: Expected 3-day work loss due to Biohazard public shutdown (Actuarial probability factor = 1.5%)
     if hazardous_material_spill:
-        premium += 15.0
+        premium += (base_avg_daily_loss * 3.0) * 0.015
         
     return jsonify({
         "base_premium_inr": base_premium,
