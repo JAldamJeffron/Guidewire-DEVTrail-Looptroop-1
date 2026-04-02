@@ -80,6 +80,13 @@ function App() {
               <p>Unplanned curfews & blockades</p>
             </div>
           </div>
+          <div className="trigger-item">
+            <div className="trigger-icon" style={{ background: 'rgba(255, 69, 0, 0.2)', color: '#FF4500' }}>🛢️</div>
+            <div className="trigger-text">
+              <h4>Fuel Scarcity</h4>
+              <p>Petroleum shortage (War)</p>
+            </div>
+          </div>
         </div>
       </section>
 
